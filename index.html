@@ -471,7 +471,7 @@ function buildLegend() {
 
 function color(d) {
   if(view==='borough') return BC[d.bor]||'#555';
-  if(view==='firm'){let f=d.firm||'';if(Array.isArray(f))f=f[0];return FC[f]||'#555'}
+  if(view==='firm') return FC[d.firm||'']||'#555'
   const t=d.tanks||1; return t>=5?TC['5+']:(TC[t]||TC[1]);
 }
 function show(d){return view!=='borough'||activeBor.has(d.bor)}
@@ -522,7 +522,7 @@ canvas.addEventListener('click', e=>{
     if(dist<bd){bd=dist;best=d}
   }
   if(best){
-    let f=best.firm||'Not recorded'; if(Array.isArray(f))f=f.join(', ');
+    const f=best.firm||'Not recorded';
     const t=best.tanks||1;
     const yrs=best.firstYr&&best.lastYr?`${best.firstYr}-${best.lastYr}`:'N/A';
     L.popup({maxWidth:250}).setLatLng([best.lat,best.lng]).setContent(`<div class="wt-popup">
