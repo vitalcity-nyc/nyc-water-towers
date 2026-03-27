@@ -323,13 +323,14 @@ body {
 .wt-popup .wt-row {
   display: flex;
   justify-content: space-between;
+  gap: 12px;
   padding: 3px 0;
   font-size: 0.72rem;
   border-bottom: 1px solid #eee;
 }
 .wt-popup .wt-row:last-child { border-bottom: none; }
-.wt-popup .wt-k { color: #888; }
-.wt-popup .wt-v { font-weight: 600; color: #0f1419; }
+.wt-popup .wt-k { color: #888; white-space: nowrap; }
+.wt-popup .wt-v { font-weight: 600; color: #0f1419; text-align: right; }
 
 @media (max-width: 480px) {
   .stats-bar { grid-template-columns: repeat(2, 1fr); }
