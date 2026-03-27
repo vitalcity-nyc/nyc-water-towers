@@ -561,7 +561,7 @@ si.addEventListener('blur',()=>setTimeout(()=>sr.classList.remove('active'),200)
 
 // Init
 (async()=>{
-  data=await(await fetch('data.json')).json();
+  data=await(await fetch('data.json?v=2')).json();
   map=L.map('map',{center:[40.755,-73.96],zoom:12,minZoom:10,maxZoom:18,zoomControl:false});
   L.control.zoom({position:'bottomright'}).addTo(map);
   L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:20}).addTo(map);
