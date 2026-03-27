@@ -6,981 +6,570 @@
 <title>NYC water towers</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
 <style>
-@font-face {
-  font-family: 'Halyard';
-  src: local('Halyard Display'), local('HalyardDisplay'), local('Halyard');
-  font-weight: 900;
-  font-style: normal;
-}
-@font-face {
-  font-family: 'Halyard';
-  src: local('Halyard Text Bold'), local('HalyardText-Bold');
-  font-weight: 700;
-  font-style: normal;
-}
-@font-face {
-  font-family: 'Halyard';
-  src: local('Halyard Text'), local('HalyardText-Regular'), local('Halyard Text Book');
-  font-weight: 400;
-  font-style: normal;
-}
-@font-face {
-  font-family: 'Halyard';
-  src: local('Halyard Text Light'), local('HalyardText-Light');
-  font-weight: 300;
-  font-style: normal;
-}
-@font-face {
-  font-family: 'Gascogne';
-  src: local('Gascogne Extra Light'), local('Gascogne-ExtraLight'), local('Gascogne');
-  font-weight: 200;
-  font-style: normal;
-}
-
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-:root {
-  --vc-black: #050507;
-  --vc-white: #ffffff;
-  --vc-cloud: #dddddd;
-  --vc-chartreuse: #dde44c;
-  --vc-orange: #ff7c53;
-  --vc-periwinkle: #9b9fbc;
-  --vc-rose: #cea9be;
-  --vc-magenta: #e7466d;
-  --vc-charcoal: #707175;
-  --vc-indigo: #394882;
-  --vc-cerulean: #217ebe;
-  --vc-chartreuse-80: #e4e871;
-  --vc-chartreuse-50: #edefa8;
-  --vc-chartreuse-20: #f7f8dd;
-  --vc-orange-80: #f69577;
-  --vc-orange-50: #fabcaa;
-  --vc-magenta-80: #ec6b8a;
-  --vc-cerulean-80: #4e98cb;
-
-  --font-primary: 'Halyard', 'Helvetica Neue', Arial, sans-serif;
-  --font-secondary: 'Gascogne', Georgia, serif;
-
-  /* Borough colors */
-  --c-mn: #ff7c53;
-  --c-bk: #217ebe;
-  --c-bx: #9b9fbc;
-  --c-qu: #dde44c;
-  --c-si: #cea9be;
-}
-
-html, body {
-  height: 100%;
-  font-family: var(--font-primary);
-  background: var(--vc-black);
-  color: var(--vc-white);
-  overflow: hidden;
-}
-
-/* ─── INTRO ─── */
-#intro {
-  position: fixed;
-  inset: 0;
-  z-index: 1000;
-  background: var(--vc-black);
+body {
+  background: #f5f5f0;
+  font-family: 'DM Sans', system-ui, sans-serif;
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  padding: 24px;
-  text-align: center;
-  transition: opacity 1s ease, visibility 1s ease;
+  padding: 40px 16px;
 }
-#intro.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
 
-.intro-icon {
-  font-size: 4rem;
-  margin-bottom: 1rem;
-  opacity: 0;
-  animation: fadeUp 0.7s ease forwards 0.2s;
+.card {
+  width: 100%;
+  max-width: 680px;
+  background: #0f1419;
+  border-radius: 12px;
+  overflow: hidden;
+  color: #e8e4dc;
 }
-.count-up {
-  font-family: var(--font-secondary);
-  font-size: clamp(3.5rem, 11vw, 8rem);
-  color: var(--vc-orange);
-  line-height: 1;
-  opacity: 0;
-  transform: translateY(20px);
-  animation: fadeUp 0.7s ease forwards 0.4s;
+
+/* ─── HEADER ─── */
+.card-header {
+  padding: 24px 24px 0;
 }
-.intro-sub {
-  font-family: var(--font-secondary);
-  font-size: clamp(1.1rem, 3vw, 2rem);
-  color: var(--vc-white);
-  margin-top: 0.5rem;
-  opacity: 0;
-  animation: fadeUp 0.7s ease forwards 0.8s;
+.card-header h1 {
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: 1.5rem;
+  line-height: 1.2;
+  color: #fff;
+  margin-bottom: 4px;
 }
-.intro-desc {
-  font-size: 0.95rem;
-  color: var(--vc-periwinkle);
-  max-width: 520px;
-  line-height: 1.7;
-  margin-top: 1.2rem;
-  opacity: 0;
-  animation: fadeUp 0.7s ease forwards 1.2s;
+.accent-line {
+  width: 36px;
+  height: 2.5px;
+  background: #ff7c53;
+  border-radius: 2px;
+  margin-bottom: 10px;
 }
-.enter-btn {
-  margin-top: 2rem;
-  padding: 14px 40px;
-  background: transparent;
-  border: 1.5px solid var(--vc-orange);
-  color: var(--vc-orange);
-  font-family: var(--font-primary);
+.card-header .lead {
   font-size: 0.82rem;
-  font-weight: 700;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  cursor: pointer;
-  opacity: 0;
-  animation: fadeUp 0.7s ease forwards 1.6s;
-  transition: all 0.3s;
+  color: #8a8679;
+  line-height: 1.6;
+  margin-bottom: 16px;
 }
-.enter-btn:hover { background: var(--vc-orange); color: var(--vc-black); }
-
-@keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
 
 /* ─── MAP ─── */
+.map-wrap {
+  position: relative;
+  height: 380px;
+  background: #0f1419;
+}
 #map {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  background: var(--vc-black);
+  width: 100%;
+  height: 100%;
 }
-.leaflet-control-attribution { display: none !important; }
-.leaflet-control-zoom { border: none !important; box-shadow: 0 2px 12px rgba(0,0,0,0.4) !important; }
-.leaflet-control-zoom a {
-  background: rgba(5,5,7,0.9) !important;
-  color: var(--vc-periwinkle) !important;
-  border: 1px solid rgba(255,255,255,0.1) !important;
-  width: 34px !important; height: 34px !important; line-height: 34px !important; font-size: 16px !important;
-}
-.leaflet-control-zoom a:hover { background: rgba(30,30,35,0.95) !important; color: var(--vc-white) !important; }
-
-/* ─── Canvas ─── */
 #pointCanvas {
   position: absolute;
   inset: 0;
   z-index: 450;
   pointer-events: none;
 }
+.leaflet-control-attribution { display: none !important; }
+.leaflet-control-zoom { border: none !important; box-shadow: 0 2px 8px rgba(0,0,0,0.3) !important; }
+.leaflet-control-zoom a {
+  background: rgba(15,20,25,0.9) !important;
+  color: #8a8679 !important;
+  border: 1px solid rgba(255,255,255,0.1) !important;
+  width: 28px !important; height: 28px !important; line-height: 28px !important; font-size: 14px !important;
+}
+.leaflet-control-zoom a:hover { background: rgba(30,35,40,0.95) !important; color: #e8e4dc !important; }
 
-/* ─── PANEL ─── */
-#panel {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  z-index: 600;
-  width: 370px;
-  max-height: calc(100vh - 40px);
-  overflow-y: auto;
-  background: rgba(5,5,7,0.92);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 14px;
-  padding: 26px;
-  opacity: 0;
-  transform: translateX(-20px);
-  transition: opacity 0.8s ease 0.3s, transform 0.8s ease 0.3s;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(255,255,255,0.1) transparent;
+/* Map controls overlay */
+.map-controls {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 500;
+  display: flex;
+  gap: 4px;
 }
-#panel.visible { opacity: 1; transform: translateX(0); }
-
-#panel h1 {
-  font-family: var(--font-secondary);
-  font-size: 1.55rem;
-  line-height: 1.2;
-  margin-bottom: 4px;
-}
-.accent-line {
-  width: 44px;
-  height: 3px;
-  background: var(--vc-orange);
-  border-radius: 2px;
-  margin-bottom: 16px;
-}
-.lead {
-  font-size: 0.88rem;
-  color: var(--vc-periwinkle);
-  line-height: 1.65;
-  margin-bottom: 18px;
-}
-.section-label {
-  font-size: 0.65rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  color: var(--vc-charcoal);
-  margin-bottom: 10px;
-  margin-top: 6px;
-}
-
-/* Stats */
-.stat-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-.stat-card {
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.06);
-  border-radius: 10px;
-  padding: 13px;
-}
-.stat-card .number {
-  font-family: var(--font-secondary);
-  font-size: 1.4rem;
-  color: var(--vc-chartreuse);
-}
-.stat-card .label {
+.map-btn {
+  padding: 5px 10px;
+  background: rgba(15,20,25,0.88);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 6px;
+  color: #8a8679;
+  font-family: 'DM Sans', system-ui, sans-serif;
   font-size: 0.68rem;
-  color: var(--vc-charcoal);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  margin-top: 2px;
-}
-
-/* Borough bars */
-.borough-bars { margin-bottom: 18px; }
-.borough-bar {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 7px;
-}
-.borough-bar .name {
-  font-size: 0.75rem;
   font-weight: 600;
-  width: 85px;
-  text-align: right;
-  color: var(--vc-periwinkle);
+  cursor: pointer;
+  transition: all 0.2s;
 }
-.borough-bar .track {
-  flex: 1;
-  height: 16px;
-  background: rgba(255,255,255,0.04);
-  border-radius: 3px;
-  overflow: hidden;
+.map-btn.active {
+  background: rgba(255,124,83,0.18);
+  border-color: rgba(255,124,83,0.5);
+  color: #ff7c53;
 }
-.borough-bar .fill {
-  height: 100%;
-  border-radius: 3px;
-  width: 0;
-  transition: width 1.5s cubic-bezier(0.22, 1, 0.36, 1);
+.map-btn:hover:not(.active) { border-color: rgba(255,255,255,0.2); color: #e8e4dc; }
+
+/* Search */
+.map-search {
+  position: absolute;
+  top: 10px;
+  right: 40px;
+  z-index: 500;
+  width: 180px;
 }
-.borough-bar .count {
+.map-search input {
+  width: 100%;
+  padding: 5px 8px;
+  background: rgba(15,20,25,0.88);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 6px;
+  color: #e8e4dc;
+  font-family: 'DM Sans', system-ui, sans-serif;
   font-size: 0.7rem;
-  font-weight: 600;
-  width: 45px;
-  color: var(--vc-periwinkle);
+  outline: none;
+  transition: border-color 0.2s;
 }
-
-/* Firm breakdown */
-.firm-list { margin-bottom: 18px; }
-.firm-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px 0;
+.map-search input::placeholder { color: #555; }
+.map-search input:focus { border-color: #ff7c53; }
+.search-results {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  max-height: 160px;
+  overflow-y: auto;
+  background: rgba(15,20,25,0.95);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 6px;
+  margin-top: 3px;
+}
+.search-results.active { display: block; }
+.search-result {
+  padding: 6px 8px;
+  font-size: 0.7rem;
+  color: #8a8679;
+  cursor: pointer;
   border-bottom: 1px solid rgba(255,255,255,0.04);
 }
-.firm-row:last-child { border-bottom: none; }
-.firm-name {
-  font-size: 0.82rem;
-  font-weight: 500;
-  color: var(--vc-white);
-}
-.firm-count {
-  font-size: 0.78rem;
-  font-weight: 700;
-  color: var(--vc-chartreuse);
-  font-family: var(--font-secondary);
-}
-.firm-note {
-  font-size: 0.72rem;
-  color: var(--vc-charcoal);
-  line-height: 1.5;
-  margin-top: 4px;
-}
+.search-result:hover { background: rgba(255,255,255,0.05); color: #e8e4dc; }
+.search-result .sr-addr { color: #e8e4dc; font-weight: 500; }
+.search-result .sr-nta { font-size: 0.62rem; color: #555; }
 
-/* Explainer */
-.explainer {
-  background: rgba(221,228,76,0.06);
-  border-left: 3px solid var(--vc-chartreuse);
-  border-radius: 0 10px 10px 0;
-  padding: 14px 16px;
-  margin-bottom: 14px;
-}
-.explainer h3 {
-  font-family: var(--font-secondary);
-  font-size: 1rem;
-  color: var(--vc-chartreuse);
-  margin-bottom: 6px;
-}
-.explainer p {
-  font-size: 0.8rem;
-  color: var(--vc-periwinkle);
-  line-height: 1.6;
-}
-.explainer .hl { color: var(--vc-orange); font-weight: 600; }
-
-/* Legend */
-.legend {
+/* Legend strip */
+.legend-strip {
   display: flex;
-  gap: 12px;
+  gap: 10px;
+  padding: 8px 12px;
+  background: rgba(0,0,0,0.3);
   flex-wrap: wrap;
-  margin-top: 6px;
-  margin-bottom: 14px;
 }
 .legend-item {
   display: flex;
   align-items: center;
-  gap: 5px;
-  font-size: 0.7rem;
-  color: var(--vc-periwinkle);
+  gap: 4px;
+  font-size: 0.62rem;
+  color: #8a8679;
   cursor: pointer;
   transition: opacity 0.2s;
 }
-.legend-item.dimmed { opacity: 0.3; }
+.legend-item.dimmed { opacity: 0.25; }
 .legend-dot {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
 }
 
-/* View toggles */
-.view-toggles {
-  display: flex;
-  gap: 5px;
-  margin-bottom: 16px;
+/* ─── STATS BAR ─── */
+.stats-bar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-top: 1px solid rgba(255,255,255,0.06);
 }
-.view-toggle {
-  flex: 1;
-  padding: 7px 10px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 7px;
-  color: var(--vc-charcoal);
-  font-family: var(--font-primary);
-  font-size: 0.72rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s;
+.stat {
+  padding: 14px 12px;
   text-align: center;
+  border-right: 1px solid rgba(255,255,255,0.06);
 }
-.view-toggle.active {
-  background: rgba(221,228,76,0.12);
-  border-color: var(--vc-chartreuse);
-  color: var(--vc-chartreuse);
+.stat:last-child { border-right: none; }
+.stat .num {
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: 1.15rem;
+  color: #ff7c53;
 }
-.view-toggle:hover:not(.active) {
-  border-color: rgba(255,255,255,0.15);
-  color: var(--vc-white);
+.stat .lbl {
+  font-size: 0.58rem;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-top: 1px;
 }
 
-/* Search */
-.search-wrap {
-  position: relative;
-  margin-bottom: 14px;
+/* ─── LOWER SECTIONS ─── */
+.card-body {
+  padding: 16px 24px 20px;
 }
-.search-wrap input {
-  width: 100%;
-  padding: 9px 12px 9px 32px;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 8px;
-  color: var(--vc-white);
-  font-family: var(--font-primary);
-  font-size: 0.82rem;
-  outline: none;
-  transition: border-color 0.2s;
-}
-.search-wrap input::placeholder { color: var(--vc-charcoal); }
-.search-wrap input:focus { border-color: var(--vc-chartreuse); }
-.search-wrap .icon {
-  position: absolute;
-  left: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 0.85rem;
-  color: var(--vc-charcoal);
-  pointer-events: none;
-}
-.search-results {
-  display: none;
-  max-height: 200px;
-  overflow-y: auto;
-  background: rgba(5,5,7,0.95);
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 8px;
-  margin-top: 4px;
-}
-.search-results.active { display: block; }
-.search-result {
-  padding: 8px 12px;
-  font-size: 0.78rem;
-  color: var(--vc-periwinkle);
-  cursor: pointer;
-  border-bottom: 1px solid rgba(255,255,255,0.04);
-}
-.search-result:hover { background: rgba(255,255,255,0.05); color: var(--vc-white); }
-.search-result .sr-addr { color: var(--vc-white); font-weight: 500; }
-.search-result .sr-nta { font-size: 0.7rem; color: var(--vc-charcoal); }
 
-/* Popup */
-.wt-popup {
-  font-family: var(--font-primary);
-  min-width: 220px;
-}
-.wt-popup h3 {
-  font-family: var(--font-secondary);
-  font-size: 1rem;
-  color: var(--vc-black);
-  margin-bottom: 2px;
-}
-.wt-popup .wt-nta {
-  font-size: 0.72rem;
-  color: var(--vc-charcoal);
+/* Borough breakdown - compact horizontal bars */
+.borough-section { margin-bottom: 16px; }
+.section-label {
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #555;
   margin-bottom: 8px;
 }
-.wt-popup .wt-detail {
+.bar-row {
   display: flex;
-  justify-content: space-between;
-  padding: 4px 0;
-  font-size: 0.78rem;
-  border-bottom: 1px solid #eee;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
 }
-.wt-popup .wt-detail:last-child { border-bottom: none; }
-.wt-popup .wt-key { color: var(--vc-charcoal); }
-.wt-popup .wt-val { font-weight: 600; color: var(--vc-black); }
-
-.source {
-  font-size: 0.65rem;
-  color: rgba(255,255,255,0.25);
-  margin-top: 14px;
-  line-height: 1.5;
-}
-.source a {
-  color: rgba(255,255,255,0.35);
-  text-decoration: none;
-}
-.source a:hover { color: var(--vc-chartreuse); }
-
-/* Firm filter pills */
-.firm-pills {
-  display: flex;
-  gap: 5px;
-  flex-wrap: wrap;
-  margin-bottom: 14px;
-}
-.firm-pill {
-  padding: 4px 10px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 20px;
-  color: var(--vc-periwinkle);
+.bar-name {
   font-size: 0.68rem;
   font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s;
+  width: 70px;
+  text-align: right;
+  color: #8a8679;
 }
-.firm-pill.active {
-  background: rgba(221,228,76,0.12);
-  border-color: var(--vc-chartreuse);
-  color: var(--vc-chartreuse);
+.bar-track {
+  flex: 1;
+  height: 10px;
+  background: rgba(255,255,255,0.04);
+  border-radius: 2px;
+  overflow: hidden;
 }
-.firm-pill:hover:not(.active) { border-color: rgba(255,255,255,0.2); }
+.bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  width: 0;
+  transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.bar-count {
+  font-size: 0.62rem;
+  font-weight: 600;
+  width: 34px;
+  color: #8a8679;
+}
 
-@media (max-width: 768px) {
-  #panel {
-    top: auto; bottom: 0; left: 0; right: 0;
-    width: 100%; max-height: 55vh;
-    border-radius: 14px 14px 0 0;
-    transform: translateY(20px);
-  }
-  #panel.visible { transform: translateY(0); }
+/* Builders compact */
+.builders-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.builder-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+}
+.builder-card .b-name {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #e8e4dc;
+  margin-bottom: 2px;
+}
+.builder-card .b-count {
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: 1rem;
+  color: #ff7c53;
+}
+.builder-card .b-note {
+  font-size: 0.55rem;
+  color: #555;
+  margin-top: 1px;
+}
+
+/* Context note */
+.context {
+  font-size: 0.75rem;
+  color: #8a8679;
+  line-height: 1.6;
+  margin-bottom: 14px;
+  padding: 10px 12px;
+  background: rgba(255,124,83,0.05);
+  border-left: 2px solid rgba(255,124,83,0.3);
+  border-radius: 0 6px 6px 0;
+}
+.context .hl { color: #ff7c53; font-weight: 600; }
+
+.source {
+  font-size: 0.58rem;
+  color: #444;
+  line-height: 1.5;
+}
+.source a { color: #555; text-decoration: none; }
+.source a:hover { color: #ff7c53; }
+
+/* ─── POPUP ─── */
+.wt-popup {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  min-width: 200px;
+}
+.wt-popup h3 {
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: 0.92rem;
+  color: #0f1419;
+  margin-bottom: 1px;
+}
+.wt-popup .wt-nta {
+  font-size: 0.65rem;
+  color: #888;
+  margin-bottom: 6px;
+}
+.wt-popup .wt-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 3px 0;
+  font-size: 0.72rem;
+  border-bottom: 1px solid #eee;
+}
+.wt-popup .wt-row:last-child { border-bottom: none; }
+.wt-popup .wt-k { color: #888; }
+.wt-popup .wt-v { font-weight: 600; color: #0f1419; }
+
+@media (max-width: 480px) {
+  .stats-bar { grid-template-columns: repeat(2, 1fr); }
+  .stat:nth-child(2) { border-right: none; }
+  .builders-grid { grid-template-columns: 1fr; }
+  .map-search { width: 140px; right: 36px; }
+  .map-wrap { height: 300px; }
 }
 </style>
 </head>
 <body>
 
-<!-- Intro -->
-<div id="intro">
-  <div class="intro-icon">&#x1FAA3;</div>
-  <div class="count-up" id="counter">0</div>
-  <div class="intro-sub">wooden water towers on NYC rooftops</div>
-  <div class="intro-desc">
-    Since the 1800s, these cedar and redwood barrels have supplied water to every floor above the sixth.
-    Two family-run companies still build almost all of them by hand.
-  </div>
-  <button class="enter-btn" id="enterBtn">Explore the map</button>
-</div>
-
-<!-- Map -->
-<div id="map"></div>
-<canvas id="pointCanvas"></canvas>
-
-<!-- Panel -->
-<div id="panel">
-  <h1>NYC water towers</h1>
-  <div class="accent-line"></div>
-  <p class="lead">
-    New York City has more than 5,600 registered rooftop water tanks -- the wooden, barrel-shaped icons
-    visible from any vantage point. They exist because city water pressure only reaches about six stories.
-    Above that, gravity from these tanks does the work.
-  </p>
-
-  <!-- Search -->
-  <div class="search-wrap">
-    <span class="icon">&#x1F50D;</span>
-    <input type="text" id="searchInput" placeholder="Search by address or neighborhood...">
-    <div class="search-results" id="searchResults"></div>
+<div class="card">
+  <!-- Header -->
+  <div class="card-header">
+    <h1>NYC water towers</h1>
+    <div class="accent-line"></div>
+    <p class="lead">
+      There are more than 5,600 registered rooftop water tanks across the five boroughs.
+      City water pressure only reaches about six stories -- above that, gravity from these
+      cedar and redwood barrels does the work.
+    </p>
   </div>
 
-  <!-- View toggles -->
-  <div class="section-label">Color by</div>
-  <div class="view-toggles">
-    <button class="view-toggle active" data-view="borough">Borough</button>
-    <button class="view-toggle" data-view="firm">Builder</button>
-    <button class="view-toggle" data-view="tanks">Tank count</button>
+  <!-- Map -->
+  <div class="map-wrap">
+    <div class="map-controls">
+      <button class="map-btn active" data-view="borough">Borough</button>
+      <button class="map-btn" data-view="firm">Builder</button>
+      <button class="map-btn" data-view="tanks">Tanks</button>
+    </div>
+    <div class="map-search">
+      <input type="text" id="searchInput" placeholder="Search address...">
+      <div class="search-results" id="searchResults"></div>
+    </div>
+    <div id="map"></div>
+    <canvas id="pointCanvas"></canvas>
+    <div class="legend-strip" id="legend"></div>
   </div>
 
   <!-- Stats -->
-  <div class="stat-grid" id="statGrid">
-    <div class="stat-card">
-      <div class="number" id="statTotal">5,625</div>
-      <div class="label">Registered tanks</div>
-    </div>
-    <div class="stat-card">
-      <div class="number" id="statMulti">1,024</div>
-      <div class="label">Multi-tank buildings</div>
-    </div>
-    <div class="stat-card">
-      <div class="number" id="statFirms">3</div>
-      <div class="label">Major builders</div>
-    </div>
-    <div class="stat-card">
-      <div class="number" id="statYears">25+</div>
-      <div class="label">Years of inspections</div>
-    </div>
+  <div class="stats-bar">
+    <div class="stat"><div class="num">5,625</div><div class="lbl">Buildings</div></div>
+    <div class="stat"><div class="num">1,024</div><div class="lbl">Multi-tank</div></div>
+    <div class="stat"><div class="num">3</div><div class="lbl">Major builders</div></div>
+    <div class="stat"><div class="num">25</div><div class="lbl">Years of data</div></div>
   </div>
 
-  <!-- Borough bars -->
-  <div class="section-label" id="breakdownLabel">By borough</div>
-  <div class="borough-bars" id="boroughBars"></div>
+  <!-- Body -->
+  <div class="card-body">
+    <!-- Borough bars -->
+    <div class="borough-section">
+      <div class="section-label">By borough</div>
+      <div id="boroughBars"></div>
+    </div>
 
-  <!-- Legend -->
-  <div class="section-label">Legend</div>
-  <div class="legend" id="legend"></div>
+    <!-- Builders -->
+    <div class="section-label">The builders</div>
+    <div class="builders-grid">
+      <div class="builder-card">
+        <div class="b-name">Rosenwach</div>
+        <div class="b-count">3,294</div>
+        <div class="b-note">Est. 1866</div>
+      </div>
+      <div class="builder-card">
+        <div class="b-name">Isseks Bros.</div>
+        <div class="b-count">2,471</div>
+        <div class="b-note">Est. 1880s</div>
+      </div>
+      <div class="builder-card">
+        <div class="b-name">American P&T</div>
+        <div class="b-count">1,115</div>
+        <div class="b-note">&nbsp;</div>
+      </div>
+    </div>
 
-  <!-- Builders -->
-  <div class="section-label">The builders</div>
-  <div class="explainer">
-    <h3>A craft passed down for generations</h3>
-    <p>
-      Nearly all of NYC's wooden water towers are built and maintained by just three companies,
-      two of them family-run since the <span class="hl">19th century</span>.
-      <strong>Rosenwach Tank Co.</strong> (founded 1866) and <strong>Isseks Brothers</strong>
-      (founded 1880s) still hand-build tanks from cedar and redwood -- the same way it was done
-      when the first skyscrapers went up. <strong>American Pipe & Tank</strong> rounds out the trio.
-    </p>
-  </div>
+    <!-- Context -->
+    <div class="context">
+      Still made from <span class="hl">cedar and redwood</span> because wood insulates against freezing
+      and swells when wet, making tanks watertight without toxic sealants.
+      A typical tank holds <span class="hl">5,000-10,000 gallons</span> and lasts 25-35 years.
+    </div>
 
-  <div class="firm-list" id="firmList"></div>
-
-  <!-- Why wood -->
-  <div class="section-label">Why they are still made of wood</div>
-  <div class="explainer">
-    <h3>Cedar and redwood, no sealants needed</h3>
-    <p>
-      Wood is a natural insulator -- it keeps water from freezing in winter without heaters.
-      When the staves get wet, they swell, making the tank <span class="hl">watertight without any
-      toxic sealants</span>. A well-maintained wooden tank lasts 25-35 years.
-      Steel tanks exist but are rarer, more expensive, and require liners.
-    </p>
-  </div>
-
-  <!-- How they work -->
-  <div class="section-label">How they work</div>
-  <div class="explainer">
-    <h3>Gravity does the heavy lifting</h3>
-    <p>
-      Pumps in the basement push water up to the rooftop tank (typically holding
-      <span class="hl">5,000 to 10,000 gallons</span>). From there, gravity feeds water
-      back down to every floor. A float valve triggers the pump when the level drops.
-      The system also provides the pressure needed for fire sprinklers.
-    </p>
-  </div>
-
-  <div class="source">
-    Data: <a href="https://data.cityofnewyork.us/Health/Self-Reported-Drinking-Water-Tank-Inspection-Results/gjm4-k24g" target="_blank">NYC
-    Dept. of Health, Self-Reported Drinking Water Tank Inspections</a>.
-    5,625 unique building locations with annual inspection records from 2000-2025.
+    <div class="source">
+      Data: <a href="https://data.cityofnewyork.us/Health/Self-Reported-Drinking-Water-Tank-Inspection-Results/gjm4-k24g" target="_blank">NYC Dept. of Health, Self-Reported Drinking Water Tank Inspections</a>, 2000-2025.
+      Click any dot for building details.
+    </div>
   </div>
 </div>
 
 <script>
-const BOR_CODES = { MN: 'Manhattan', BK: 'Brooklyn', BX: 'Bronx', QU: 'Queens', ST: 'Staten Island' };
-const BOR_COLORS = { MN: '#ff7c53', BK: '#217ebe', BX: '#9b9fbc', QU: '#dde44c', ST: '#cea9be' };
-const BOR_ORDER = ['MN', 'BK', 'BX', 'QU', 'ST'];
+const BOR = { MN:'Manhattan', BK:'Brooklyn', BX:'Bronx', QU:'Queens', ST:'Staten Island' };
+const BC = { MN:'#ff7c53', BK:'#217ebe', BX:'#9b9fbc', QU:'#c8cc3a', ST:'#cea9be' };
+const BO = ['MN','BK','BX','QU','ST'];
+const FC = { 'Rosenwach Tank Co.':'#ff7c53', 'Isseks Brothers':'#217ebe', 'American Pipe & Tank':'#c8cc3a' };
+const TC = { 1:'#9b9fbc', 2:'#c8cc3a', 3:'#ff7c53', 4:'#e7466d', '5+':'#cea9be' };
 
-const FIRM_COLORS = {
-  'Rosenwach Tank Co.': '#ff7c53',
-  'Isseks Brothers': '#217ebe',
-  'American Pipe & Tank': '#dde44c',
-};
-const TANK_COLORS = { 1: '#9b9fbc', 2: '#dde44c', 3: '#ff7c53', 4: '#e7466d', '5+': '#cea9be' };
+let map, data=[], view='borough', activeBor=new Set(BO);
+const canvas=document.getElementById('pointCanvas');
+const ctx=canvas.getContext('2d');
 
-let map, rawData = [], currentView = 'borough', activeBoroughs = new Set(BOR_ORDER);
-let activeFirm = null;
-const canvas = document.getElementById('pointCanvas');
-const ctx = canvas.getContext('2d');
-
-// ─── Counter ───
-function animateCounter(el, target, dur = 2200) {
-  const start = performance.now();
-  (function tick(now) {
-    const p = Math.min((now - start) / dur, 1);
-    const e = 1 - Math.pow(1 - p, 3);
-    el.textContent = Math.floor(e * target).toLocaleString();
-    if (p < 1) requestAnimationFrame(tick);
-  })(performance.now());
+// Build bars
+function buildBars() {
+  const c={}; BO.forEach(b=>c[b]=0);
+  data.forEach(d=>{if(c[d.bor]!==undefined)c[d.bor]++});
+  const mx=Math.max(...Object.values(c));
+  document.getElementById('boroughBars').innerHTML=BO.map(b=>`
+    <div class="bar-row">
+      <span class="bar-name">${BOR[b]}</span>
+      <div class="bar-track"><div class="bar-fill" data-t="${(c[b]/mx*100).toFixed(1)}" style="background:${BC[b]}"></div></div>
+      <span class="bar-count">${c[b].toLocaleString()}</span>
+    </div>`).join('');
+  setTimeout(()=>{
+    document.querySelectorAll('.bar-fill').forEach(f=>f.style.width=f.dataset.t+'%');
+  },100);
 }
 
-window.addEventListener('DOMContentLoaded', () => {
-  setTimeout(() => animateCounter(document.getElementById('counter'), 5625, 2200), 400);
-});
-
-// ─── Enter ───
-document.getElementById('enterBtn').addEventListener('click', () => {
-  document.getElementById('intro').classList.add('hidden');
-  setTimeout(() => {
-    document.getElementById('panel').classList.add('visible');
-    animateBars();
-  }, 400);
-  initMap();
-});
-
-// ─── Bars animation ───
-function animateBars() {
-  document.querySelectorAll('.borough-bar .fill').forEach(fill => {
-    setTimeout(() => { fill.style.width = fill.dataset.target + '%'; }, 200);
-  });
-}
-
-// ─── Load data ───
-async function loadData() {
-  const resp = await fetch('data.json');
-  return await resp.json();
-}
-
-// ─── Build borough bars ───
-function buildBoroughBars() {
-  const counts = {};
-  BOR_ORDER.forEach(b => counts[b] = 0);
-  rawData.forEach(d => { if (counts[d.bor] !== undefined) counts[d.bor]++; });
-  const max = Math.max(...Object.values(counts));
-  const el = document.getElementById('boroughBars');
-  el.innerHTML = BOR_ORDER.map(b => `
-    <div class="borough-bar">
-      <span class="name">${BOR_CODES[b]}</span>
-      <div class="track"><div class="fill" data-target="${(counts[b]/max*100).toFixed(1)}" style="background:${BOR_COLORS[b]}"></div></div>
-      <span class="count">${counts[b].toLocaleString()}</span>
-    </div>
-  `).join('');
-}
-
-// ─── Build legend ───
+// Legend
 function buildLegend() {
-  const el = document.getElementById('legend');
-  if (currentView === 'borough') {
-    el.innerHTML = BOR_ORDER.map(b => `
-      <div class="legend-item ${activeBoroughs.has(b) ? '' : 'dimmed'}" data-bor="${b}">
-        <div class="legend-dot" style="background:${BOR_COLORS[b]}"></div>${BOR_CODES[b]}
-      </div>
-    `).join('');
-    el.querySelectorAll('.legend-item').forEach(item => {
-      item.addEventListener('click', () => {
-        const b = item.dataset.bor;
-        if (activeBoroughs.has(b)) {
-          if (activeBoroughs.size === 1) { activeBoroughs = new Set(BOR_ORDER); }
-          else { activeBoroughs.delete(b); }
-        } else { activeBoroughs.add(b); }
-        buildLegend();
-        drawPoints();
-      });
-    });
-  } else if (currentView === 'firm') {
-    const firms = ['Rosenwach Tank Co.', 'Isseks Brothers', 'American Pipe & Tank', 'Other'];
-    const cols = { ...FIRM_COLORS, Other: '#707175' };
-    el.innerHTML = firms.map(f => `
-      <div class="legend-item" data-firm="${f}">
-        <div class="legend-dot" style="background:${cols[f]}"></div>${f}
-      </div>
-    `).join('');
-  } else if (currentView === 'tanks') {
-    const labels = { 1: '1 tank', 2: '2 tanks', 3: '3 tanks', 4: '4 tanks', '5+': '5+ tanks' };
-    el.innerHTML = Object.entries(labels).map(([k, v]) => `
-      <div class="legend-item">
-        <div class="legend-dot" style="background:${TANK_COLORS[k]}"></div>${v}
-      </div>
-    `).join('');
+  const el=document.getElementById('legend');
+  if(view==='borough') {
+    el.innerHTML=BO.map(b=>`<div class="legend-item ${activeBor.has(b)?'':'dimmed'}" data-b="${b}"><div class="legend-dot" style="background:${BC[b]}"></div>${BOR[b]}</div>`).join('');
+    el.querySelectorAll('.legend-item').forEach(i=>i.addEventListener('click',()=>{
+      const b=i.dataset.b;
+      if(activeBor.has(b)){if(activeBor.size===1)activeBor=new Set(BO);else activeBor.delete(b)}
+      else activeBor.add(b);
+      buildLegend(); draw();
+    }));
+  } else if(view==='firm') {
+    const f=['Rosenwach Tank Co.','Isseks Brothers','American Pipe & Tank','Other'];
+    const c={...FC,Other:'#555'};
+    el.innerHTML=f.map(n=>`<div class="legend-item"><div class="legend-dot" style="background:${c[n]}"></div>${n}</div>`).join('');
+  } else {
+    const l={1:'1 tank',2:'2',3:'3',4:'4','5+':'5+'};
+    el.innerHTML=Object.entries(l).map(([k,v])=>`<div class="legend-item"><div class="legend-dot" style="background:${TC[k]}"></div>${v}</div>`).join('');
   }
 }
 
-// ─── Build firm list ───
-function buildFirmList() {
-  const counts = {};
-  rawData.forEach(d => {
-    let f = d.firm || 'Unknown';
-    if (Array.isArray(f)) f = f[0];
-    counts[f] = (counts[f] || 0) + 1;
-  });
-  const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 6);
-  document.getElementById('firmList').innerHTML = sorted.map(([name, count]) => `
-    <div class="firm-row">
-      <span class="firm-name">${name}</span>
-      <span class="firm-count">${count.toLocaleString()}</span>
-    </div>
-  `).join('');
+function color(d) {
+  if(view==='borough') return BC[d.bor]||'#555';
+  if(view==='firm'){let f=d.firm||'';if(Array.isArray(f))f=f[0];return FC[f]||'#555'}
+  const t=d.tanks||1; return t>=5?TC['5+']:(TC[t]||TC[1]);
+}
+function show(d){return view!=='borough'||activeBor.has(d.bor)}
+
+function resize() {
+  const dpr=window.devicePixelRatio||1;
+  const w=canvas.parentElement.clientWidth, h=canvas.parentElement.clientHeight;
+  canvas.width=w*dpr; canvas.height=h*dpr;
+  canvas.style.width=w+'px'; canvas.style.height=h+'px';
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  draw();
 }
 
-// ─── Get color for data point ───
-function getColor(d) {
-  if (currentView === 'borough') {
-    return BOR_COLORS[d.bor] || '#707175';
+function draw() {
+  const w=canvas.clientWidth, h=canvas.clientHeight;
+  ctx.clearRect(0,0,w,h);
+  if(!map||!data.length) return;
+  const bounds=map.getBounds(), zoom=map.getZoom();
+  const r=zoom<12?1.2:zoom<14?2:zoom<16?3.5:5.5;
+  const batches={};
+  for(const d of data){
+    if(!show(d))continue;
+    if(d.lat<bounds.getSouth()||d.lat>bounds.getNorth()||d.lng<bounds.getWest()||d.lng>bounds.getEast())continue;
+    const c=color(d); if(!batches[c])batches[c]=[];
+    batches[c].push(map.latLngToContainerPoint([d.lat,d.lng]));
   }
-  if (currentView === 'firm') {
-    let f = d.firm || '';
-    if (Array.isArray(f)) f = f[0];
-    return FIRM_COLORS[f] || '#707175';
-  }
-  if (currentView === 'tanks') {
-    const t = d.tanks || 1;
-    if (t >= 5) return TANK_COLORS['5+'];
-    return TANK_COLORS[t] || TANK_COLORS[1];
-  }
-  return '#707175';
-}
-
-// ─── Should show point ───
-function shouldShow(d) {
-  if (currentView === 'borough' && !activeBoroughs.has(d.bor)) return false;
-  return true;
-}
-
-// ─── Init map ───
-async function initMap() {
-  rawData = await loadData();
-
-  map = L.map('map', {
-    center: [40.755, -73.96],
-    zoom: 12,
-    minZoom: 10,
-    maxZoom: 18,
-    zoomControl: false
-  });
-
-  L.control.zoom({ position: 'bottomright' }).addTo(map);
-
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', {
-    subdomains: 'abcd', maxZoom: 20
-  }).addTo(map);
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png', {
-    subdomains: 'abcd', maxZoom: 20, opacity: 0.6
-  }).addTo(map);
-
-  // Click handler on canvas
-  canvas.style.pointerEvents = 'auto';
-  canvas.addEventListener('click', handleCanvasClick);
-
-  resizeCanvas();
-  window.addEventListener('resize', resizeCanvas);
-  map.on('move zoom moveend zoomend', drawPoints);
-
-  buildBoroughBars();
-  buildLegend();
-  buildFirmList();
-
-  setTimeout(animateBars, 300);
-  drawPoints();
-}
-
-function resizeCanvas() {
-  const dpr = window.devicePixelRatio || 1;
-  canvas.width = window.innerWidth * dpr;
-  canvas.height = window.innerHeight * dpr;
-  canvas.style.width = window.innerWidth + 'px';
-  canvas.style.height = window.innerHeight + 'px';
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  drawPoints();
-}
-
-function drawPoints() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  if (!map || !rawData.length) return;
-
-  const bounds = map.getBounds();
-  const zoom = map.getZoom();
-  const radius = zoom < 12 ? 1.5 : zoom < 14 ? 2.5 : zoom < 16 ? 4 : 6;
-
-  // Batch by color
-  const batches = {};
-  for (let i = 0; i < rawData.length; i++) {
-    const d = rawData[i];
-    if (!shouldShow(d)) continue;
-    if (d.lat < bounds.getSouth() || d.lat > bounds.getNorth() ||
-        d.lng < bounds.getWest() || d.lng > bounds.getEast()) continue;
-
-    const color = getColor(d);
-    if (!batches[color]) batches[color] = [];
-    const pt = map.latLngToContainerPoint([d.lat, d.lng]);
-    batches[color].push(pt);
-  }
-
-  ctx.globalAlpha = 0.8;
-  for (const [color, points] of Object.entries(batches)) {
-    ctx.fillStyle = color;
-    ctx.beginPath();
-    for (const pt of points) {
-      ctx.moveTo(pt.x + radius, pt.y);
-      ctx.arc(pt.x, pt.y, radius, 0, Math.PI * 2);
-    }
+  ctx.globalAlpha=0.8;
+  for(const[c,pts]of Object.entries(batches)){
+    ctx.fillStyle=c; ctx.beginPath();
+    for(const p of pts){ctx.moveTo(p.x+r,p.y);ctx.arc(p.x,p.y,r,0,Math.PI*2)}
     ctx.fill();
   }
-  ctx.globalAlpha = 1;
+  ctx.globalAlpha=1;
 }
 
-// ─── Canvas click -> popup ───
-function handleCanvasClick(e) {
-  if (!map || !rawData.length) return;
-  const rect = canvas.getBoundingClientRect();
-  const cx = e.clientX - rect.left;
-  const cy = e.clientY - rect.top;
-  const zoom = map.getZoom();
-  const hitRadius = zoom < 14 ? 8 : 12;
-
-  let closest = null, minDist = hitRadius;
-  for (const d of rawData) {
-    if (!shouldShow(d)) continue;
-    const pt = map.latLngToContainerPoint([d.lat, d.lng]);
-    const dx = pt.x - cx, dy = pt.y - cy;
-    const dist = Math.sqrt(dx * dx + dy * dy);
-    if (dist < minDist) { minDist = dist; closest = d; }
+// Click
+canvas.style.pointerEvents='auto';
+canvas.addEventListener('click', e=>{
+  if(!map||!data.length)return;
+  const rect=canvas.getBoundingClientRect();
+  const cx=e.clientX-rect.left, cy=e.clientY-rect.top;
+  const hr=map.getZoom()<14?8:12;
+  let best=null, bd=hr;
+  for(const d of data){
+    if(!show(d))continue;
+    const p=map.latLngToContainerPoint([d.lat,d.lng]);
+    const dist=Math.hypot(p.x-cx,p.y-cy);
+    if(dist<bd){bd=dist;best=d}
   }
-
-  if (closest) {
-    let firm = closest.firm || 'Not recorded';
-    if (Array.isArray(firm)) firm = firm.join(', ');
-    const tanks = closest.tanks || 1;
-    const years = closest.firstYr && closest.lastYr
-      ? `${closest.firstYr} - ${closest.lastYr}`
-      : 'N/A';
-
-    const html = `<div class="wt-popup">
-      <h3>${closest.addr}</h3>
-      <div class="wt-nta">${closest.nta || BOR_CODES[closest.bor] || ''} &middot; ${closest.zip}</div>
-      <div class="wt-detail"><span class="wt-key">Borough</span><span class="wt-val">${BOR_CODES[closest.bor]}</span></div>
-      <div class="wt-detail"><span class="wt-key">Tanks on roof</span><span class="wt-val">${tanks}</span></div>
-      <div class="wt-detail"><span class="wt-key">Builder / inspector</span><span class="wt-val">${firm}</span></div>
-      <div class="wt-detail"><span class="wt-key">Inspection years</span><span class="wt-val">${years}</span></div>
-      <div class="wt-detail"><span class="wt-key">Total inspections</span><span class="wt-val">${closest.inspections || 0}</span></div>
-      <div class="wt-detail"><span class="wt-key">Water quality passes</span><span class="wt-val">${closest.passes || 0}</span></div>
-      ${closest.fails ? `<div class="wt-detail"><span class="wt-key">Quality failures</span><span class="wt-val" style="color:#e7466d">${closest.fails}</span></div>` : ''}
-    </div>`;
-
-    L.popup({ maxWidth: 280, className: 'wt-popup-container' })
-      .setLatLng([closest.lat, closest.lng])
-      .setContent(html)
-      .openOn(map);
+  if(best){
+    let f=best.firm||'Not recorded'; if(Array.isArray(f))f=f.join(', ');
+    const t=best.tanks||1;
+    const yrs=best.firstYr&&best.lastYr?`${best.firstYr}-${best.lastYr}`:'N/A';
+    L.popup({maxWidth:250}).setLatLng([best.lat,best.lng]).setContent(`<div class="wt-popup">
+      <h3>${best.addr}</h3>
+      <div class="wt-nta">${best.nta||BOR[best.bor]||''} &middot; ${best.zip}</div>
+      <div class="wt-row"><span class="wt-k">Tanks</span><span class="wt-v">${t}</span></div>
+      <div class="wt-row"><span class="wt-k">Builder</span><span class="wt-v">${f}</span></div>
+      <div class="wt-row"><span class="wt-k">Inspections</span><span class="wt-v">${best.inspections||0} (${yrs})</span></div>
+      <div class="wt-row"><span class="wt-k">Quality passes</span><span class="wt-v">${best.passes||0}</span></div>
+      ${best.fails?`<div class="wt-row"><span class="wt-k">Failures</span><span class="wt-v" style="color:#e7466d">${best.fails}</span></div>`:''}</div>`).openOn(map);
   }
-}
-
-// ─── View toggles ───
-document.querySelectorAll('.view-toggle').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelector('.view-toggle.active').classList.remove('active');
-    btn.classList.add('active');
-    currentView = btn.dataset.view;
-
-    const label = document.getElementById('breakdownLabel');
-    if (currentView === 'borough') label.textContent = 'By borough';
-    else if (currentView === 'firm') label.textContent = 'By builder';
-    else label.textContent = 'By tank count';
-
-    buildLegend();
-    drawPoints();
-  });
 });
 
-// ─── Search ───
-const searchInput = document.getElementById('searchInput');
-const searchResults = document.getElementById('searchResults');
+// Toggle
+document.querySelectorAll('.map-btn').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelector('.map-btn.active').classList.remove('active');
+  b.classList.add('active'); view=b.dataset.view;
+  buildLegend(); draw();
+}));
 
-searchInput.addEventListener('input', () => {
-  const q = searchInput.value.trim().toLowerCase();
-  if (q.length < 2) { searchResults.classList.remove('active'); return; }
-
-  const matches = rawData.filter(d => {
-    const addr = (d.addr || '').toLowerCase();
-    const nta = (d.nta || '').toLowerCase();
-    const zip = (d.zip || '');
-    return addr.includes(q) || nta.includes(q) || zip.includes(q);
-  }).slice(0, 15);
-
-  if (!matches.length) { searchResults.classList.remove('active'); return; }
-
-  searchResults.innerHTML = matches.map((d, i) => `
-    <div class="search-result" data-idx="${rawData.indexOf(d)}">
-      <div class="sr-addr">${d.addr}</div>
-      <div class="sr-nta">${d.nta || BOR_CODES[d.bor]} &middot; ${d.zip}</div>
-    </div>
-  `).join('');
-  searchResults.classList.add('active');
-
-  searchResults.querySelectorAll('.search-result').forEach(el => {
-    el.addEventListener('click', () => {
-      const idx = parseInt(el.dataset.idx);
-      const d = rawData[idx];
-      map.flyTo([d.lat, d.lng], 16, { duration: 0.8 });
-      searchResults.classList.remove('active');
-      searchInput.value = d.addr;
-
-      // Trigger popup
-      setTimeout(() => {
-        let firm = d.firm || 'Not recorded';
-        if (Array.isArray(firm)) firm = firm.join(', ');
-        const tanks = d.tanks || 1;
-        const years = d.firstYr && d.lastYr ? `${d.firstYr} - ${d.lastYr}` : 'N/A';
-        const html = `<div class="wt-popup">
-          <h3>${d.addr}</h3>
-          <div class="wt-nta">${d.nta || BOR_CODES[d.bor] || ''} &middot; ${d.zip}</div>
-          <div class="wt-detail"><span class="wt-key">Borough</span><span class="wt-val">${BOR_CODES[d.bor]}</span></div>
-          <div class="wt-detail"><span class="wt-key">Tanks on roof</span><span class="wt-val">${tanks}</span></div>
-          <div class="wt-detail"><span class="wt-key">Builder / inspector</span><span class="wt-val">${firm}</span></div>
-          <div class="wt-detail"><span class="wt-key">Inspection years</span><span class="wt-val">${years}</span></div>
-          <div class="wt-detail"><span class="wt-key">Total inspections</span><span class="wt-val">${d.inspections || 0}</span></div>
-          <div class="wt-detail"><span class="wt-key">Water quality passes</span><span class="wt-val">${d.passes || 0}</span></div>
-          ${d.fails ? `<div class="wt-detail"><span class="wt-key">Quality failures</span><span class="wt-val" style="color:#e7466d">${d.fails}</span></div>` : ''}
-        </div>`;
-        L.popup({ maxWidth: 280 }).setLatLng([d.lat, d.lng]).setContent(html).openOn(map);
-      }, 900);
-    });
-  });
+// Search
+const si=document.getElementById('searchInput'), sr=document.getElementById('searchResults');
+si.addEventListener('input',()=>{
+  const q=si.value.trim().toLowerCase();
+  if(q.length<2){sr.classList.remove('active');return}
+  const m=data.filter(d=>((d.addr||'')+(d.nta||'')+(d.zip||'')).toLowerCase().includes(q)).slice(0,10);
+  if(!m.length){sr.classList.remove('active');return}
+  sr.innerHTML=m.map(d=>`<div class="search-result" data-lat="${d.lat}" data-lng="${d.lng}"><div class="sr-addr">${d.addr}</div><div class="sr-nta">${d.nta||BOR[d.bor]||''}</div></div>`).join('');
+  sr.classList.add('active');
+  sr.querySelectorAll('.search-result').forEach(el=>el.addEventListener('click',()=>{
+    map.flyTo([+el.dataset.lat,+el.dataset.lng],16,{duration:0.6});
+    sr.classList.remove('active'); si.value='';
+  }));
 });
+si.addEventListener('blur',()=>setTimeout(()=>sr.classList.remove('active'),200));
 
-searchInput.addEventListener('blur', () => {
-  setTimeout(() => searchResults.classList.remove('active'), 200);
-});
+// Init
+(async()=>{
+  data=await(await fetch('data.json')).json();
+  map=L.map('map',{center:[40.755,-73.96],zoom:12,minZoom:10,maxZoom:18,zoomControl:false});
+  L.control.zoom({position:'bottomright'}).addTo(map);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:20}).addTo(map);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:20,opacity:0.5}).addTo(map);
+  resize();
+  window.addEventListener('resize',resize);
+  map.on('move zoom moveend zoomend',draw);
+  buildBars(); buildLegend();
+})();
 </script>
 </body>
 </html>
