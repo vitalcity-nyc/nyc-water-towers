@@ -528,9 +528,12 @@ function resize(){
 }
 
 function draw(){
+  if(!map||!canvas) return;
+  // Pin canvas to viewport: position it at the layer-point that maps to (0,0) container
+  L.DomUtil.setPosition(canvas, map.containerPointToLayerPoint([0,0]));
   const w=canvas.clientWidth, h=canvas.clientHeight;
   ctx.clearRect(0,0,w,h);
-  if(!map||!data.length) return;
+  if(!data.length) return;
   const bounds=map.getBounds(), zoom=map.getZoom();
   const r=zoom<12?1.4:zoom<14?2.2:zoom<16?3.5:5.5;
   const batches={};
@@ -635,11 +638,12 @@ si.addEventListener('blur',()=>setTimeout(()=>sr.classList.remove('active'),200)
     scrollWheelZoom:true,
     preferCanvas:true
   });
-  // Inject canvas as child of leaflet container so it stacks between
-  // tile-pane (z:200) and popup-pane (z:700)
+  // Inject canvas INSIDE leaflet's mapPane (which creates a stacking context
+  // because of its CSS transform). With z-index:450 it sits between
+  // overlay-pane (400) and shadow-pane (500), well below popup-pane (700).
   canvas=document.createElement('canvas');
   canvas.className='point-canvas';
-  document.getElementById('map').appendChild(canvas);
+  map.getPanes().mapPane.appendChild(canvas);
   ctx=canvas.getContext('2d');
   L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png',{
     subdomains:'abcd', maxZoom:20,
