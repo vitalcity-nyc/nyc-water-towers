@@ -169,10 +169,11 @@ h1{
 .map-wrap{
   position:relative; height:520px; background:var(--vc-cloud);
 }
-#map{position:absolute; inset:0; width:100%; height:100%; z-index:1;}
-#pointCanvas{
-  position:absolute; inset:0; z-index:2;
+#map{position:absolute; inset:0; width:100%; height:100%;}
+.point-canvas{
+  position:absolute; left:0; top:0; width:100%; height:100%;
   pointer-events:none;
+  z-index:450; /* above tile-pane (200) and overlay-pane (400), below popup-pane (700) */
 }
 .leaflet-container{background:#f3f0ea; font-family:var(--vc-sans);}
 .leaflet-control-attribution{
@@ -406,7 +407,6 @@ h1{
     </div>
     <div class="map-wrap">
       <div id="map"></div>
-      <canvas id="pointCanvas"></canvas>
     </div>
     <div class="legend" id="legend"></div>
   </div>
@@ -470,8 +470,7 @@ const FC={
 const TC={1:'#9b9fbc',2:'#dde44c',3:'#ff7c53',4:'#e7466d','5+':'#394882'};
 
 let map, data=[], view='borough', activeBor=new Set(BO);
-const canvas=document.getElementById('pointCanvas');
-const ctx=canvas.getContext('2d');
+let canvas, ctx;
 
 // Bars
 function buildBars(){
@@ -519,10 +518,11 @@ function color(d){
 function show(d){return view!=='borough'||activeBor.has(d.bor);}
 
 function resize(){
+  if(!canvas||!map) return;
   const dpr=window.devicePixelRatio||1;
-  const w=canvas.parentElement.clientWidth, h=canvas.parentElement.clientHeight;
-  canvas.width=w*dpr; canvas.height=h*dpr;
-  canvas.style.width=w+'px'; canvas.style.height=h+'px';
+  const sz=map.getSize(); // {x,y} in pixels
+  canvas.width=sz.x*dpr; canvas.height=sz.y*dpr;
+  canvas.style.width=sz.x+'px'; canvas.style.height=sz.y+'px';
   ctx.setTransform(dpr,0,0,dpr,0,0);
   draw();
 }
@@ -635,6 +635,12 @@ si.addEventListener('blur',()=>setTimeout(()=>sr.classList.remove('active'),200)
     scrollWheelZoom:true,
     preferCanvas:true
   });
+  // Inject canvas as child of leaflet container so it stacks between
+  // tile-pane (z:200) and popup-pane (z:700)
+  canvas=document.createElement('canvas');
+  canvas.className='point-canvas';
+  document.getElementById('map').appendChild(canvas);
+  ctx=canvas.getContext('2d');
   L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png',{
     subdomains:'abcd', maxZoom:20,
     attribution:'&copy; OpenStreetMap &copy; CARTO'
