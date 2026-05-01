@@ -218,6 +218,12 @@ h1{
   width:12px; height:12px; border-radius:50%;
   flex-shrink:0;
 }
+.legend-caption{
+  font-family:var(--vc-sans); font-weight:300;
+  font-size:.78rem; color:var(--vc-charcoal);
+  width:100%;
+  margin-bottom:2px;
+}
 
 /* Popup */
 .leaflet-popup-content-wrapper{
@@ -398,7 +404,7 @@ h1{
       <div class="btn-group" role="tablist">
         <button class="active" data-view="borough">Borough</button>
         <button data-view="firm">Builder</button>
-        <button data-view="tanks">Tank count</button>
+        <button data-view="tanks">Tanks per building</button>
       </div>
       <div class="search">
         <input type="text" id="searchInput" placeholder="Search address or neighborhood">
@@ -472,6 +478,15 @@ const TC={1:'#9b9fbc',2:'#dde44c',3:'#ff7c53',4:'#e7466d','5+':'#394882'};
 let map, data=[], view='borough', activeBor=new Set(BO);
 let canvas, ctx;
 
+// Some source rows come in ALL CAPS — convert them to title case for display.
+// Mixed-case strings pass through unchanged; ordinals like "1ST" become "1st"
+// because the digit isn't matched by [a-z], so only the suffix is touched.
+function titleCase(s){
+  if(!s) return s;
+  if(s!==s.toUpperCase()) return s;
+  return s.toLowerCase().replace(/\b([a-z])([a-z]*)\b/g,(m,first,rest)=>first.toUpperCase()+rest);
+}
+
 // Bars
 function buildBars(){
   const c={}; BO.forEach(b=>c[b]=0);
@@ -506,7 +521,8 @@ function buildLegend(){
     el.innerHTML=f.map(n=>`<div class="legend-item"><span class="legend-dot" style="background:${c[n]}"></span>${n==='American Pipe & Tank'?'American Pipe &amp; Tank':n}</div>`).join('');
   } else {
     const l={1:'1 tank',2:'2',3:'3',4:'4','5+':'5 or more'};
-    el.innerHTML=Object.entries(l).map(([k,v])=>`<div class="legend-item"><span class="legend-dot" style="background:${TC[k]}"></span>${v}</div>`).join('');
+    const caption='<div class="legend-caption">Each dot is one building, colored by tanks on its roof:</div>';
+    el.innerHTML=caption+Object.entries(l).map(([k,v])=>`<div class="legend-item"><span class="legend-dot" style="background:${TC[k]}"></span>${v}</div>`).join('');
   }
 }
 
@@ -588,8 +604,8 @@ function showPopup(d){
   const yrs=d.firstYr&&d.lastYr?`${d.firstYr}-${d.lastYr}`:'N/A';
   const html=`<div class="wt-popup">
     <div class="pop-kicker">${BOR[d.bor]||''}${d.zip?' &middot; '+d.zip:''}</div>
-    <h3>${d.addr}</h3>
-    <div class="wt-nta">${d.nta||''}</div>
+    <h3>${titleCase(d.addr)}</h3>
+    <div class="wt-nta">${titleCase(d.nta)||''}</div>
     <div class="wt-row"><span class="wt-k">Tanks</span><span class="wt-v">${t}</span></div>
     <div class="wt-row"><span class="wt-k">Builder</span><span class="wt-v">${f}</span></div>
     <div class="wt-row"><span class="wt-k">Inspections</span><span class="wt-v">${d.inspections||0} (${yrs})</span></div>
@@ -614,7 +630,7 @@ si.addEventListener('input',()=>{
   if(q.length<2){sr.classList.remove('active'); return;}
   const m=data.filter(d=>((d.addr||'')+' '+(d.nta||'')+' '+(d.zip||'')).toLowerCase().includes(q)).slice(0,10);
   if(!m.length){sr.classList.remove('active'); return;}
-  sr.innerHTML=m.map(d=>`<div class="search-result" data-lat="${d.lat}" data-lng="${d.lng}"><div>${d.addr}</div><div class="sr-nta">${d.nta||BOR[d.bor]||''}${d.zip?' &middot; '+d.zip:''}</div></div>`).join('');
+  sr.innerHTML=m.map(d=>`<div class="search-result" data-lat="${d.lat}" data-lng="${d.lng}"><div>${titleCase(d.addr)}</div><div class="sr-nta">${titleCase(d.nta)||BOR[d.bor]||''}${d.zip?' &middot; '+d.zip:''}</div></div>`).join('');
   sr.classList.add('active');
   sr.querySelectorAll('.search-result').forEach(el=>el.addEventListener('click',()=>{
     const lat=+el.dataset.lat, lng=+el.dataset.lng;
