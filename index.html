@@ -173,7 +173,7 @@ h1{
 .point-canvas{
   position:absolute; left:0; top:0; width:100%; height:100%;
   pointer-events:none;
-  z-index:450; /* above tile-pane (200) and overlay-pane (400), below popup-pane (700) */
+  z-index:450 !important; /* above tile-pane (200) and overlay-pane (400), below popup-pane (700); !important needed because Leaflet's pane styles otherwise win */
 }
 .leaflet-container{background:#f3f0ea; font-family:var(--vc-sans);}
 .leaflet-control-attribution{
