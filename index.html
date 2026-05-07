@@ -8,7 +8,7 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <link rel="stylesheet" href="https://use.typekit.net/qqk2vto.css">
 <style>
-/* ─── Vital City tokens ─── */
+/* Vital City tokens */
 :root {
   --vc-black:#050507;
   --vc-white:#ffffff;
@@ -24,6 +24,7 @@
   --vc-chartreuse-20:#f7f8dd;
   --vc-orange-20:#fde5dd;
   --vc-cloud-50:#eeeeee;
+  --vc-paper:#f7f7f4;
 
   --vc-sans:"halyard-text","Inter","Helvetica Neue",Arial,sans-serif;
   --vc-serif:"GascogneTS","Source Serif 4",Georgia,"Times New Roman",serif;
@@ -41,92 +42,79 @@ html,body{background:var(--vc-white);color:var(--vc-black);}
 body{
   font-family:var(--vc-sans); font-weight:300;
   line-height:1.5;
-  padding:32px 20px 60px;
+  padding:24px 16px;
   display:flex; justify-content:center;
 }
 
-.shell{
-  width:100%; max-width:1080px;
+.card{
+  width:100%; max-width:880px;
+  background:var(--vc-white);
+  border:1px solid var(--vc-black);
+  overflow:hidden;
 }
 
-/* ─── Header ─── */
-header{margin-bottom:20px;}
-.kicker{
-  font-family:var(--vc-sans); font-weight:700;
-  font-size:.72rem; letter-spacing:.14em; text-transform:uppercase;
-  color:var(--vc-orange);
-  margin-bottom:10px;
+/* Header */
+.head{
+  padding:22px 24px 20px;
+  border-bottom:1px solid var(--vc-cloud);
 }
-h1{
+.head h1{
   font-family:var(--vc-serif); font-weight:300;
-  font-size:clamp(2rem,4vw,3rem);
-  line-height:1.05;
+  font-size:1.7rem; line-height:1.1;
   color:var(--vc-black);
-  margin-bottom:14px;
-  letter-spacing:-.01em;
+  letter-spacing:-.005em;
+  margin-bottom:8px;
 }
-.dek{
+.head .dek{
   font-family:var(--vc-sans); font-weight:300;
-  font-size:1.05rem; line-height:1.55;
-  color:var(--vc-charcoal);
-  max-width:680px;
+  font-size:.92rem; line-height:1.5;
+  color:var(--vc-black);
+  max-width:62ch;
 }
-.dek b{color:var(--vc-black); font-weight:700;}
+.head .dek b{font-weight:700;}
 
-.rule{
-  height:2px; background:var(--vc-black);
-  margin:18px 0 0;
-}
-
-/* ─── Stats row ─── */
+/* Stats strip */
 .stats{
   display:grid;
   grid-template-columns:repeat(4,1fr);
-  border-bottom:1px solid var(--vc-black);
-  margin-bottom:24px;
+  background:var(--vc-paper);
+  border-bottom:1px solid var(--vc-cloud);
 }
 .stat{
-  padding:18px 14px 16px;
+  padding:14px 16px 12px;
   border-right:1px solid var(--vc-cloud);
 }
 .stat:last-child{border-right:none;}
 .stat .num{
   font-family:var(--vc-serif); font-weight:300;
-  font-size:2.2rem; line-height:1;
+  font-size:1.7rem; line-height:1;
   color:var(--vc-black);
-  margin-bottom:6px;
+  margin-bottom:4px;
 }
 .stat .lbl{
   font-family:var(--vc-sans); font-weight:700;
-  font-size:.65rem; letter-spacing:.12em; text-transform:uppercase;
+  font-size:.6rem; letter-spacing:.12em; text-transform:uppercase;
   color:var(--vc-charcoal);
 }
 
-/* ─── Map card ─── */
-.map-card{
-  background:var(--vc-white);
-  border:1px solid var(--vc-cloud);
-  border-radius:2px;
-  margin-bottom:28px;
-  overflow:hidden;
-}
+/* Toolbar */
 .map-toolbar{
   display:flex; align-items:center; gap:14px; flex-wrap:wrap;
-  padding:14px 16px;
+  padding:12px 16px;
   border-bottom:1px solid var(--vc-cloud);
   background:var(--vc-white);
 }
 .toolbar-label{
   font-family:var(--vc-sans); font-weight:700;
-  font-size:.62rem; letter-spacing:.14em; text-transform:uppercase;
+  font-size:.6rem; letter-spacing:.14em; text-transform:uppercase;
   color:var(--vc-charcoal);
 }
 .btn-group{display:inline-flex; border:1px solid var(--vc-black);}
 .btn-group button{
   font-family:var(--vc-sans); font-weight:700;
-  font-size:.7rem; letter-spacing:.06em; text-transform:uppercase;
+  font-size:.68rem; letter-spacing:.06em; text-transform:uppercase;
   background:var(--vc-white); color:var(--vc-black);
-  padding:7px 12px;
+  padding:6px 12px;
   border:none; border-right:1px solid var(--vc-black);
   cursor:pointer;
   transition:background .15s,color .15s;
@@ -136,13 +124,13 @@ h1{
 .btn-group button.active{background:var(--vc-black); color:var(--vc-white);}
 
 .search{
-  position:relative; flex:1; min-width:180px; max-width:280px;
+  position:relative; flex:1; min-width:170px; max-width:260px;
   margin-left:auto;
 }
 .search input{
   width:100%;
-  padding:7px 10px;
-  font-family:var(--vc-sans); font-weight:300; font-size:.85rem;
+  padding:6px 10px;
+  font-family:var(--vc-sans); font-weight:300; font-size:.82rem;
   color:var(--vc-black);
   background:var(--vc-white);
   border:1px solid var(--vc-cloud);
@@ -153,7 +141,7 @@ h1{
   display:none; position:absolute; top:100%; left:0; right:0;
   background:var(--vc-white);
   border:1px solid var(--vc-cloud); border-top:none;
-  max-height:220px; overflow-y:auto;
+  max-height:200px; overflow-y:auto;
   z-index:1000;
 }
 .search-results.active{display:block;}
@@ -166,14 +154,15 @@ h1{
 .search-result:hover{background:var(--vc-orange-20);}
 .search-result .sr-nta{font-size:.66rem; color:var(--vc-charcoal); margin-top:2px;}
 
+/* Map */
 .map-wrap{
-  position:relative; height:520px; background:var(--vc-cloud);
+  position:relative; height:460px; background:var(--vc-cloud);
 }
 #map{position:absolute; inset:0; width:100%; height:100%;}
 .point-canvas{
   position:absolute; left:0; top:0; width:100%; height:100%;
   pointer-events:none;
-  z-index:450 !important; /* above tile-pane (200) and overlay-pane (400), below popup-pane (700); !important needed because Leaflet's pane styles otherwise win */
+  z-index:450 !important;
 }
 .leaflet-container{background:#f3f0ea; font-family:var(--vc-sans);}
 .leaflet-control-attribution{
@@ -184,45 +173,44 @@ h1{
 .leaflet-control-zoom{
   border:1px solid var(--vc-black) !important;
   box-shadow:none !important;
-  margin:14px !important;
+  margin:12px !important;
 }
 .leaflet-control-zoom a{
   background:var(--vc-white) !important;
   color:var(--vc-black) !important;
   border:none !important;
   border-bottom:1px solid var(--vc-black) !important;
-  width:30px !important; height:30px !important; line-height:30px !important;
-  font-size:18px !important; font-weight:300 !important;
+  width:28px !important; height:28px !important; line-height:28px !important;
+  font-size:17px !important; font-weight:300 !important;
   font-family:var(--vc-sans) !important;
 }
 .leaflet-control-zoom a:last-child{border-bottom:none !important;}
 .leaflet-control-zoom a:hover{background:var(--vc-chartreuse) !important;}
 
-/* Legend */
+/* Legend (below map) */
 .legend{
   display:flex; gap:18px; flex-wrap:wrap;
   padding:12px 16px;
   border-top:1px solid var(--vc-cloud);
+  border-bottom:1px solid var(--vc-cloud);
   background:var(--vc-white);
+}
+.legend-caption{
+  font-family:var(--vc-sans); font-weight:700;
+  font-size:.6rem; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--vc-charcoal);
+  width:100%;
+  margin-bottom:2px;
 }
 .legend-item{
   display:flex; align-items:center; gap:7px;
   font-family:var(--vc-sans); font-weight:300;
   font-size:.78rem; color:var(--vc-black);
-  cursor:pointer;
   user-select:none;
-  transition:opacity .15s;
 }
-.legend-item.dimmed{opacity:.3;}
 .legend-dot{
   width:12px; height:12px; border-radius:50%;
   flex-shrink:0;
-}
-.legend-caption{
-  font-family:var(--vc-sans); font-weight:300;
-  font-size:.78rem; color:var(--vc-charcoal);
-  width:100%;
-  margin-bottom:2px;
 }
 
 /* Popup */
@@ -250,7 +238,7 @@ h1{
 }
 .wt-popup h3{
   font-family:var(--vc-serif); font-weight:300;
-  font-size:1.1rem; line-height:1.15;
+  font-size:1.05rem; line-height:1.15;
   color:var(--vc-black);
   margin-bottom:3px;
 }
@@ -264,43 +252,42 @@ h1{
 .wt-popup .wt-row{
   display:flex; justify-content:space-between; gap:14px;
   padding:5px 0;
-  font-size:.8rem;
+  font-size:.78rem;
 }
 .wt-popup .wt-k{color:var(--vc-charcoal);}
 .wt-popup .wt-v{color:var(--vc-black); font-weight:700;}
 .wt-popup .wt-v.bad{color:var(--vc-magenta);}
 
-/* ─── Lower content grid ─── */
+/* Lower content grid */
 .lower{
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:36px;
-  margin-bottom:32px;
+  gap:28px;
+  padding:20px 24px 18px;
+  border-bottom:1px solid var(--vc-cloud);
 }
 .section-head{
-  font-family:var(--vc-sans); font-weight:900;
-  font-size:.78rem; letter-spacing:.16em; text-transform:uppercase;
-  color:var(--vc-black);
-  border-bottom:1.5px solid var(--vc-black);
-  padding-bottom:8px;
-  margin-bottom:16px;
+  font-family:var(--vc-sans); font-weight:700;
+  font-size:.62rem; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--vc-charcoal);
+  margin-bottom:12px;
 }
 
 /* Borough bars */
 .bar-row{
   display:grid;
-  grid-template-columns:90px 1fr 50px;
+  grid-template-columns:84px 1fr 50px;
   align-items:center;
   gap:10px;
-  margin-bottom:10px;
+  margin-bottom:8px;
 }
 .bar-name{
   font-family:var(--vc-sans); font-weight:300;
-  font-size:.88rem; color:var(--vc-black);
+  font-size:.82rem; color:var(--vc-black);
   text-align:right;
 }
 .bar-track{
-  height:18px; background:var(--vc-cloud-50);
+  height:14px; background:var(--vc-cloud-50);
   position:relative;
 }
 .bar-fill{
@@ -309,87 +296,92 @@ h1{
 }
 .bar-count{
   font-family:var(--vc-sans); font-weight:700;
-  font-size:.85rem; color:var(--vc-black);
+  font-size:.8rem; color:var(--vc-black);
 }
 
 /* Builders */
 .builders{
   display:grid;
   grid-template-columns:repeat(3,1fr);
-  gap:10px;
+  gap:8px;
 }
 .builder-card{
-  border:1px solid var(--vc-black);
-  padding:14px 12px;
+  border:1px solid var(--vc-cloud);
+  padding:10px 10px 8px;
 }
 .builder-card .b-name{
   font-family:var(--vc-sans); font-weight:700;
-  font-size:.65rem; letter-spacing:.1em; text-transform:uppercase;
+  font-size:.6rem; letter-spacing:.08em; text-transform:uppercase;
   color:var(--vc-charcoal);
-  margin-bottom:6px;
+  margin-bottom:4px;
 }
 .builder-card .b-count{
   font-family:var(--vc-serif); font-weight:300;
-  font-size:1.7rem; line-height:1;
+  font-size:1.4rem; line-height:1;
   color:var(--vc-black);
   margin-bottom:4px;
 }
 .builder-card .b-note{
   font-family:var(--vc-sans); font-weight:300;
-  font-size:.7rem; color:var(--vc-charcoal);
+  font-size:.66rem; line-height:1.3;
+  color:var(--vc-charcoal);
 }
 .builder-card .b-bar{
-  height:3px; margin-top:10px; width:100%;
+  height:3px; margin-top:8px; width:100%;
 }
 
-/* ─── Context callout ─── */
-.context{
-  background:var(--vc-chartreuse-20);
-  border-left:3px solid var(--vc-orange);
-  padding:18px 22px;
-  margin-bottom:24px;
-  font-family:var(--vc-sans); font-weight:300;
-  font-size:.95rem; line-height:1.55;
-  color:var(--vc-black);
-}
-.context b{font-weight:700;}
-
-/* Source */
+/* Source + footer */
 .source{
   font-family:var(--vc-sans); font-weight:300;
-  font-size:.72rem; color:var(--vc-charcoal);
-  line-height:1.55;
-  border-top:1px solid var(--vc-cloud);
-  padding-top:14px;
+  font-size:.7rem; line-height:1.55;
+  color:var(--vc-charcoal);
+  padding:14px 24px 12px;
+  border-bottom:1px solid var(--vc-cloud);
 }
+.source b{color:var(--vc-black); font-weight:700; font-size:.6rem; letter-spacing:.14em; text-transform:uppercase; margin-right:6px;}
 .source a{color:var(--vc-charcoal); text-decoration:underline;}
 .source a:hover{color:var(--vc-orange);}
 
-@media (max-width:760px){
-  body{padding:20px 14px 40px;}
+.foot{
+  display:flex; justify-content:space-between; align-items:center; gap:12px;
+  padding:12px 24px;
+  font-family:var(--vc-sans); font-weight:300;
+  font-size:.72rem;
+  color:var(--vc-charcoal);
+}
+.foot a{
+  color:var(--vc-orange);
+  text-decoration:none; font-weight:700;
+}
+.foot a:hover{text-decoration:underline;}
+
+@media (max-width:680px){
+  body{padding:16px 10px;}
+  .head{padding:18px 18px 16px;}
+  .head h1{font-size:1.45rem;}
   .stats{grid-template-columns:repeat(2,1fr);}
   .stat:nth-child(2){border-right:none;}
   .stat:nth-child(-n+2){border-bottom:1px solid var(--vc-cloud);}
-  .map-wrap{height:400px;}
-  .lower{grid-template-columns:1fr; gap:28px;}
+  .map-wrap{height:380px;}
+  .lower{grid-template-columns:1fr; gap:22px; padding:18px;}
   .builders{grid-template-columns:1fr;}
-  .map-toolbar{gap:10px;}
+  .map-toolbar{gap:10px; padding:10px 14px;}
   .search{margin-left:0; max-width:100%; width:100%;}
+  .source{padding:12px 18px;}
+  .foot{padding:10px 18px; flex-direction:column; align-items:flex-start; gap:4px;}
 }
 </style>
 </head>
 <body>
 
-<div class="shell">
+<div class="card">
 
-  <header>
-    <div class="kicker">New York City infrastructure</div>
+  <div class="head">
     <h1>The wooden water towers above us</h1>
     <p class="dek">
-      More than <b>5,600</b> registered rooftop water tanks dot the five boroughs. City water pressure climbs only about six stories on its own — above that, gravity from these <b>cedar and redwood</b> barrels does the rest. Three family-run firms have built nearly all of them, using cooperage techniques first deployed in the late 1800s.
+      More than <b>5,600</b> registered rooftop tanks dot New York City's five boroughs. City water pressure climbs only about six stories on its own; above that, gravity from these cedar and redwood barrels does the rest. Three family-run firms have built nearly all of them.
     </p>
-    <div class="rule"></div>
-  </header>
+  </div>
 
   <div class="stats">
     <div class="stat"><div class="num">5,625</div><div class="lbl">Buildings</div></div>
@@ -398,28 +390,25 @@ h1{
     <div class="stat"><div class="num">25</div><div class="lbl">Years of records</div></div>
   </div>
 
-  <div class="map-card">
-    <div class="map-toolbar">
-      <span class="toolbar-label">Color by</span>
-      <div class="btn-group" role="tablist">
-        <button class="active" data-view="borough">Borough</button>
-        <button data-view="firm">Builder</button>
-        <button data-view="tanks">Tanks per building</button>
-      </div>
-      <div class="search">
-        <input type="text" id="searchInput" placeholder="Search address or neighborhood">
-        <div class="search-results" id="searchResults"></div>
-      </div>
+  <div class="map-toolbar">
+    <span class="toolbar-label">Color by</span>
+    <div class="btn-group" role="tablist">
+      <button class="active" data-view="firm">Builder</button>
+      <button data-view="tanks">Tanks per building</button>
     </div>
-    <div class="map-wrap">
-      <div id="map"></div>
+    <div class="search">
+      <input type="text" id="searchInput" placeholder="Search address or neighborhood">
+      <div class="search-results" id="searchResults"></div>
     </div>
-    <div class="legend" id="legend"></div>
   </div>
+  <div class="map-wrap">
+    <div id="map"></div>
+  </div>
+  <div class="legend" id="legend"></div>
 
   <div class="lower">
     <div>
-      <div class="section-head">By borough</div>
+      <div class="section-head">Buildings by borough</div>
       <div id="boroughBars"></div>
     </div>
     <div>
@@ -447,47 +436,42 @@ h1{
     </div>
   </div>
 
-  <div class="context">
-    Wood holds because it insulates against freezing in winter, stays cooler in summer, and swells when wet — sealing a tank watertight without nails or synthetic sealants. A typical barrel holds <b>5,000 to 10,000 gallons</b>, is assembled on a rooftop in a single day from precut staves, and lasts roughly <b>25 to 35 years</b> before it needs replacing.
+  <div class="source">
+    <b>Sources</b> Building data: <a href="https://data.cityofnewyork.us/Health/Self-Reported-Drinking-Water-Tank-Inspection-Results/gjm4-k24g" target="_blank" rel="noopener">New York City Department of Health, Self-Reported Drinking Water Tank Inspection Results</a>, 2000-2025. Builder counts use the most recently reported inspector for each building. Historical context drawn from Thomas Mellins, "New York's Wooden Water Tanks." Click any dot for building-level detail.
   </div>
 
-  <div class="source">
-    Data: <a href="https://data.cityofnewyork.us/Health/Self-Reported-Drinking-Water-Tank-Inspection-Results/gjm4-k24g" target="_blank" rel="noopener">NYC Department of Health, Self-Reported Drinking Water Tank Inspection Results</a>, 2000-2025. Builder counts are based on the most recently reported inspector for each building. Historical context drawn from Thomas Mellins, "New York's Wooden Water Tanks." Click any dot for building-level detail.
+  <div class="foot">
+    <span>Data as of March 2026 &middot; By Vital City</span>
   </div>
 
 </div>
 
 <script>
 const BOR={MN:'Manhattan',BK:'Brooklyn',BX:'Bronx',QU:'Queens',ST:'Staten Island'};
-// Vital City palette assignments
 const BC={
-  MN:'#e7466d', // Magenta — biggest, focal
-  BK:'#217ebe', // Cerulean
-  BX:'#9b9fbc', // Periwinkle
-  QU:'#dde44c', // Chartreuse
-  ST:'#cea9be'  // Rose
+  MN:'#e7466d',
+  BK:'#217ebe',
+  BX:'#9b9fbc',
+  QU:'#dde44c',
+  ST:'#cea9be'
 };
 const BO=['MN','BK','BX','QU','ST'];
 const FC={
-  'Rosenwach Tank Co.':'#ff7c53',  // Safety Orange
-  'Isseks Brothers':'#217ebe',     // Cerulean
-  'American Pipe & Tank':'#dde44c' // Chartreuse
+  'Rosenwach Tank Co.':'#ff7c53',
+  'Isseks Brothers':'#217ebe',
+  'American Pipe & Tank':'#dde44c'
 };
 const TC={1:'#9b9fbc',2:'#dde44c',3:'#ff7c53',4:'#e7466d','5+':'#394882'};
 
-let map, data=[], view='borough', activeBor=new Set(BO);
+let map, data=[], view='firm';
 let canvas, ctx;
 
-// Some source rows come in ALL CAPS — convert them to title case for display.
-// Mixed-case strings pass through unchanged; ordinals like "1ST" become "1st"
-// because the digit isn't matched by [a-z], so only the suffix is touched.
 function titleCase(s){
   if(!s) return s;
   if(s!==s.toUpperCase()) return s;
   return s.toLowerCase().replace(/\b([a-z])([a-z]*)\b/g,(m,first,rest)=>first.toUpperCase()+rest);
 }
 
-// Bars
 function buildBars(){
   const c={}; BO.forEach(b=>c[b]=0);
   data.forEach(d=>{if(c[d.bor]!==undefined)c[d.bor]++;});
@@ -504,39 +488,29 @@ function buildBars(){
   },150);
 }
 
-// Legend
 function buildLegend(){
   const el=document.getElementById('legend');
-  if(view==='borough'){
-    el.innerHTML=BO.map(b=>`<div class="legend-item ${activeBor.has(b)?'':'dimmed'}" data-b="${b}"><span class="legend-dot" style="background:${BC[b]}"></span>${BOR[b]}</div>`).join('');
-    el.querySelectorAll('.legend-item').forEach(i=>i.addEventListener('click',()=>{
-      const b=i.dataset.b;
-      if(activeBor.has(b)){if(activeBor.size===1)activeBor=new Set(BO); else activeBor.delete(b);}
-      else activeBor.add(b);
-      buildLegend(); draw();
-    }));
-  } else if(view==='firm'){
+  if(view==='firm'){
     const f=['Rosenwach Tank Co.','Isseks Brothers','American Pipe & Tank','Other'];
     const c={...FC,Other:'#bbb'};
-    el.innerHTML=f.map(n=>`<div class="legend-item"><span class="legend-dot" style="background:${c[n]}"></span>${n==='American Pipe & Tank'?'American Pipe &amp; Tank':n}</div>`).join('');
+    el.innerHTML='<div class="legend-caption">Each dot is one building, colored by builder</div>'+
+      f.map(n=>`<div class="legend-item"><span class="legend-dot" style="background:${c[n]}"></span>${n==='American Pipe & Tank'?'American Pipe &amp; Tank':n}</div>`).join('');
   } else {
     const l={1:'1 tank',2:'2',3:'3',4:'4','5+':'5 or more'};
-    const caption='<div class="legend-caption">Each dot is one building, colored by tanks on its roof:</div>';
-    el.innerHTML=caption+Object.entries(l).map(([k,v])=>`<div class="legend-item"><span class="legend-dot" style="background:${TC[k]}"></span>${v}</div>`).join('');
+    el.innerHTML='<div class="legend-caption">Each dot is one building, colored by tanks on its roof</div>'+
+      Object.entries(l).map(([k,v])=>`<div class="legend-item"><span class="legend-dot" style="background:${TC[k]}"></span>${v}</div>`).join('');
   }
 }
 
 function color(d){
-  if(view==='borough') return BC[d.bor]||'#888';
   if(view==='firm') return FC[d.firm||'']||'#bbb';
   const t=d.tanks||1; return t>=5?TC['5+']:(TC[t]||TC[1]);
 }
-function show(d){return view!=='borough'||activeBor.has(d.bor);}
 
 function resize(){
   if(!canvas||!map) return;
   const dpr=window.devicePixelRatio||1;
-  const sz=map.getSize(); // {x,y} in pixels
+  const sz=map.getSize();
   canvas.width=sz.x*dpr; canvas.height=sz.y*dpr;
   canvas.style.width=sz.x+'px'; canvas.style.height=sz.y+'px';
   ctx.setTransform(dpr,0,0,dpr,0,0);
@@ -545,7 +519,6 @@ function resize(){
 
 function draw(){
   if(!map||!canvas) return;
-  // Pin canvas to viewport: position it at the layer-point that maps to (0,0) container
   L.DomUtil.setPosition(canvas, map.containerPointToLayerPoint([0,0]));
   const w=canvas.clientWidth, h=canvas.clientHeight;
   ctx.clearRect(0,0,w,h);
@@ -554,7 +527,6 @@ function draw(){
   const r=zoom<12?1.4:zoom<14?2.2:zoom<16?3.5:5.5;
   const batches={};
   for(const d of data){
-    if(!show(d)) continue;
     if(d.lat<bounds.getSouth()||d.lat>bounds.getNorth()||d.lng<bounds.getWest()||d.lng>bounds.getEast()) continue;
     const c=color(d);
     if(!batches[c]) batches[c]=[];
@@ -571,7 +543,6 @@ function draw(){
     ctx.fill();
   }
   ctx.globalAlpha=1;
-  // subtle stroke for high zoom
   if(zoom>=15){
     ctx.globalAlpha=.6;
     ctx.lineWidth=.7; ctx.strokeStyle='#050507';
@@ -584,13 +555,11 @@ function draw(){
   }
 }
 
-// Hit test on map clicks (canvas is pointer-events:none, so leaflet handles pan/zoom natively)
 function hitTest(latlng, containerPt){
   const zoom=map.getZoom();
   const hr=zoom<13?10:zoom<15?9:8;
   let best=null, bd=hr;
   for(const d of data){
-    if(!show(d)) continue;
     const p=map.latLngToContainerPoint([d.lat,d.lng]);
     const dist=Math.hypot(p.x-containerPt.x, p.y-containerPt.y);
     if(dist<bd){bd=dist; best=d;}
@@ -615,7 +584,6 @@ function showPopup(d){
   L.popup({maxWidth:280, autoPan:true, closeButton:true}).setLatLng([d.lat,d.lng]).setContent(html).openOn(map);
 }
 
-// Toggle buttons
 document.querySelectorAll('.btn-group button').forEach(b=>b.addEventListener('click',()=>{
   document.querySelector('.btn-group button.active').classList.remove('active');
   b.classList.add('active');
@@ -623,7 +591,6 @@ document.querySelectorAll('.btn-group button').forEach(b=>b.addEventListener('cl
   buildLegend(); draw();
 }));
 
-// Search
 const si=document.getElementById('searchInput'), sr=document.getElementById('searchResults');
 si.addEventListener('input',()=>{
   const q=si.value.trim().toLowerCase();
@@ -644,9 +611,8 @@ si.addEventListener('input',()=>{
 });
 si.addEventListener('blur',()=>setTimeout(()=>sr.classList.remove('active'),200));
 
-// Init
 (async()=>{
-  data=await(await fetch('data.json?v=3')).json();
+  data=await(await fetch('data.json?v=4')).json();
   map=L.map('map',{
     center:[40.74,-73.96], zoom:11,
     minZoom:10, maxZoom:18,
@@ -654,9 +620,6 @@ si.addEventListener('blur',()=>setTimeout(()=>sr.classList.remove('active'),200)
     scrollWheelZoom:true,
     preferCanvas:true
   });
-  // Inject canvas INSIDE leaflet's mapPane (which creates a stacking context
-  // because of its CSS transform). With z-index:450 it sits between
-  // overlay-pane (400) and shadow-pane (500), well below popup-pane (700).
   canvas=document.createElement('canvas');
   canvas.className='point-canvas';
   map.getPanes().mapPane.appendChild(canvas);
@@ -672,7 +635,6 @@ si.addEventListener('blur',()=>setTimeout(()=>sr.classList.remove('active'),200)
   window.addEventListener('resize',resize);
   map.on('move zoom moveend zoomend',draw);
 
-  // Click handler on the MAP itself (canvas is pointer-events:none)
   map.on('click', e=>{
     const pt=e.containerPoint;
     const hit=hitTest(e.latlng, pt);
