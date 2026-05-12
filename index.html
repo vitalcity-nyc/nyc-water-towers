@@ -53,6 +53,10 @@ body{
   overflow:hidden;
 }
 
+/* Embed mode: drop outer chrome so it doesn't double up with the host page's border */
+body.embed{padding:0;}
+body.embed .card{border:none; max-width:none;}
+
 /* Header */
 .head{
   padding:22px 24px 20px;
@@ -447,6 +451,11 @@ body{
 </div>
 
 <script>
+// Embed mode: ?embed=1 strips the card border and body padding so this page
+// can sit cleanly inside a Ghost HTML card without doubled borders.
+if (new URLSearchParams(location.search).get('embed') === '1') {
+  document.body.classList.add('embed');
+}
 const BOR={MN:'Manhattan',BK:'Brooklyn',BX:'Bronx',QU:'Queens',ST:'Staten Island'};
 const BC={
   MN:'#e7466d',
