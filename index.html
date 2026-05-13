@@ -453,8 +453,22 @@ body.embed .card{border:none; max-width:none;}
 <script>
 // Embed mode: ?embed=1 strips the card border and body padding so this page
 // can sit cleanly inside a Ghost HTML card without doubled borders.
+// Also posts the content height to the parent so the iframe can size to fit
+// (no trailing whitespace, no inner scrollbar).
 if (new URLSearchParams(location.search).get('embed') === '1') {
   document.body.classList.add('embed');
+  const postHeight = () => {
+    const h = Math.max(
+      document.documentElement.scrollHeight,
+      document.body.scrollHeight
+    );
+    parent.postMessage({ type: 'vc-embed-height', id: 'nyc-water-towers', height: h }, '*');
+  };
+  window.addEventListener('load', postHeight);
+  window.addEventListener('resize', postHeight);
+  // The map and stats hydrate after load — re-measure for a few seconds.
+  let n = 0;
+  const t = setInterval(() => { postHeight(); if (++n > 20) clearInterval(t); }, 300);
 }
 const BOR={MN:'Manhattan',BK:'Brooklyn',BX:'Bronx',QU:'Queens',ST:'Staten Island'};
 const BC={
