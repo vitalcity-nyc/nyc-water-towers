@@ -54,9 +54,18 @@ body{
   overflow:hidden;
 }
 
-/* Embed mode: drop outer chrome so it doesn't double up with the host page's border */
-body.embed{padding:0;}
-body.embed .card{border:none; max-width:none;}
+/* Embed mode: drop outer chrome so it doesn't double up with the host page's border.
+   Also fill the iframe's height via flex so a too-tall fallback iframe height
+   (or a parent that doesn't honor the postMessage resize) doesn't leave trapped
+   whitespace below the foot — the map absorbs the slack instead. */
+html.embed, body.embed{height:100%;}
+body.embed{padding:0; min-height:100vh; display:flex; flex-direction:column;}
+body.embed .card{
+  border:none; max-width:none;
+  flex:1; display:flex; flex-direction:column;
+  min-height:0;
+}
+body.embed .map-wrap{flex:1 1 auto; height:auto; min-height:340px;}
 
 /* Compact mode collapses the embed to its essentials: head, toolbar, map, legend.
    Stats strip, lower grid (borough chart + builders), and source are hidden — the
@@ -597,18 +606,35 @@ syncCompact();
 window.addEventListener('resize', syncCompact);
 
 // Post height to parent (Ghost embed sizing). Keep iframe tight to content.
+// Belt and suspenders: explicit measure of the card (the real visible content),
+// fire on every meaningful layout change via ResizeObserver, and re-arm the
+// interval whenever a fresh post lands so late hydration (tiles, fonts, etc.)
+// still converges.
 if (isEmbed) {
+  let lastPosted = 0;
   const postHeight = () => {
-    const h = Math.max(
-      document.documentElement.scrollHeight,
-      document.body.scrollHeight
-    );
-    parent.postMessage({ type: 'vc-embed-height', id: 'nyc-water-towers', height: h }, '*');
+    const card = document.querySelector('.card');
+    const h = Math.ceil(Math.max(
+      card ? card.getBoundingClientRect().height : 0,
+      document.body.scrollHeight,
+      document.documentElement.scrollHeight
+    ));
+    if (h && h !== lastPosted) {
+      lastPosted = h;
+      parent.postMessage({ type: 'vc-embed-height', id: 'nyc-water-towers', height: h }, '*');
+    }
   };
   window.addEventListener('load', postHeight);
   window.addEventListener('resize', postHeight);
+  document.fonts && document.fonts.ready && document.fonts.ready.then(postHeight);
+  if (window.ResizeObserver) {
+    const ro = new ResizeObserver(postHeight);
+    ro.observe(document.body);
+    const card = document.querySelector('.card');
+    if (card) ro.observe(card);
+  }
   let n = 0;
-  const t = setInterval(() => { postHeight(); if (++n > 20) clearInterval(t); }, 300);
+  const t = setInterval(() => { postHeight(); if (++n > 30) clearInterval(t); }, 250);
 }
 
 const BOR={MN:'Manhattan',BK:'Brooklyn',BX:'Bronx',QU:'Queens',ST:'Staten Island'};
@@ -973,6 +999,12 @@ si.addEventListener('blur',()=>setTimeout(()=>sr.classList.remove('active'),200)
 
   resize();
   window.addEventListener('resize',resize);
+  // Map container may resize independently of the window in embed flex layout
+  // (when the iframe height changes). Tell Leaflet so tiles re-fit.
+  if (window.ResizeObserver) {
+    const mro = new ResizeObserver(()=>{ map.invalidateSize(false); resize(); });
+    mro.observe(document.querySelector('.map-wrap'));
+  }
   map.on('move zoom moveend zoomend',()=>{draw(); updateInView();});
 
   // Hover affordance + tooltip on desktop
