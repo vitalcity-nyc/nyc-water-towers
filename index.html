@@ -971,11 +971,11 @@ si.addEventListener('blur',()=>setTimeout(()=>sr.classList.remove('active'),200)
   canvas.className='point-canvas';
   map.getPanes().mapPane.appendChild(canvas);
   ctx=canvas.getContext('2d');
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png',{
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png?key=cb1_2r82_1_ae4e70b6166057bc41b89638',{
     subdomains:'abcd', maxZoom:20,
     attribution:'&copy; OpenStreetMap &copy; CARTO'
   }).addTo(map);
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png',{
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png?key=cb1_2r82_1_ae4e70b6166057bc41b89638',{
     subdomains:'abcd', maxZoom:20, opacity:.7
   }).addTo(map);
 
